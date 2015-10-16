@@ -1,0 +1,29 @@
+#comment should be removed
+# comment should be removed
+
+# empty options are invalid
+Listen
+
+# inline comments should be removed
+Listen # this is an inline comment; line should be ignored
+
+# unrecognized options are invalid
+UnrecognizedOption blah1 blah2
+
+# these options are the only mandatory ones in this system
+ServerRoot "/absolute/path/to/server/root"
+DocumentRoot "/absolute/path/to/document/root"
+
+# these options have a default value
+Listen 9999 # 80
+AccessLog "/absolute/path/to/logs/access_log" #{server_root}/logs/access_log
+ErrorLog "/absolute/path/to/logs/error_log" #{server_root}/logs/error_log
+AccessFileName "dothtaccess"#.htaccess
+DirectoryIndex "directory_index.html" #index.html
+
+# these are special options that require three parts and are not unique
+Alias "/aa/" "/absolute/alias/to/aa"
+Alias "/bb/" "/absolute/alias/to/bb"
+
+ScriptAlias "/script_aa/" "/absolute/script/alias/to/aa"
+ScriptAlias "/script_bb/" "/absolute/script/alias/to/bb"
