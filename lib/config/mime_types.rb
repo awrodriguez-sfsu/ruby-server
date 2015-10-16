@@ -1,41 +1,31 @@
+require_relative 'config_reader'
+
 module WebServer
   module Config
-    class MimeTypes
-
-      attr_reader :file_name
-
-      :content
-      :hash
+    class MimeTypes < ConfigReader
 
       def initialize(options = {})
-        @file_name = options[:file_name] || 'config/mime.types'
-
-        @hash = {}
-
-        @content = File.read(@file_name)
+        super(options[:file_name] || 'config/mime.types')
 
         load_config_file
       end
 
       def mime_for_extension(extension)
-        @hash[extension] || 'text/plain'
+        @hashed_content[extension] || 'text/plain'
       end
 
       private
-      def load_config_file
-        @content.each_line do |raw_line|
-          clean_line = raw_line.strip.tr('"', '').gsub(/#.*/, '')
-
-          array = clean_line.split(' ')
-
-          unless array.length < 2
-            array[1..-1].each do |extension|
-              @hash[extension] = array[0]
-            end
-          end
+      def add(option)
+        option[1..-1].each do |extension|
+          @hashed_content[extension] = option[0]
         end
       end
 
+      def valid_config_option?(option)
+        option.length > 1
+      end
+
     end
+
   end
 end
