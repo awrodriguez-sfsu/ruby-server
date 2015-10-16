@@ -18,7 +18,7 @@ describe WebServer::Config::MimeTypes do
       end
 
       it 'should return default for unknown extension' do
-        expect(mime_type_object/mime_for_extension('unknown')).to eq 'text/plain'
+        expect(mime_type_object.mime_for_extension('unknown')).to eq 'text/plain'
       end
     end
 
