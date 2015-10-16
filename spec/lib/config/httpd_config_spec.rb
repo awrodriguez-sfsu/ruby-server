@@ -151,5 +151,11 @@ describe WebServer::Config::HttpdConfig do
       end
     end
 
+    describe '#file_name' do
+      it 'should return file_name' do
+        expect(httpd_config_object.file_name).to eq 'config/httpd.conf'
+      end
+    end
+
   end
 end
