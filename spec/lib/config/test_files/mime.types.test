@@ -1,0 +1,9 @@
+#comment should be removed
+# comment should be removed
+
+# empty options are invalid
+image/bmp
+
+# valid options can have one or more values
+image/gif			gif
+image/jpeg			jpeg jpg jpe
