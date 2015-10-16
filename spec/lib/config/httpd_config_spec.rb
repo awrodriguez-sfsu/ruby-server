@@ -129,7 +129,7 @@ describe WebServer::Config::HttpdConfig do
 
     describe '#document_root' do
       it 'should return DocumentRoot' do
-        expect(httpd_config_object.document_root).to eq 'home/arod/workspace_667/ruby-server/public_html'
+        expect(httpd_config_object.document_root).to eq '/home/arod/workspace_667/ruby-server/public_html'
       end
     end
 
@@ -147,7 +147,7 @@ describe WebServer::Config::HttpdConfig do
 
     describe '#script_aliased_path' do
       it 'should return script aliased path' do
-        expect(httpd_config_object.script_aliased_path('/cgi-bin/')).to eq '/home/arod/workspace_667/ruby-server/publoc_html/cgi-bin'
+        expect(httpd_config_object.script_aliased_path('/cgi-bin/')).to eq '/home/arod/workspace_667/ruby-server/public_html/cgi-bin'
       end
     end
 
