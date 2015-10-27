@@ -1,4 +1,5 @@
 require_relative 'config_reader'
+require_relative 'basic_httpd_options'
 
 module WebServer
   module Config
