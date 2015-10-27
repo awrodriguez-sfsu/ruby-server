@@ -21,10 +21,6 @@ module WebServer
         end
       end
 
-      def valid_config_option?(option)
-        option.length > 1
-      end
-
     end
 
   end

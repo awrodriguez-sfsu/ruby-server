@@ -5,9 +5,8 @@ module WebServer
       attr_reader :file_name, :content, :hashed_content
 
       def initialize(file_name)
-        @file_name  = file_name
-        @content    = File.read(file_name)
-
+        @file_name      = file_name
+        @content        = File.read(file_name)
         @hashed_content = {}
       end
 
@@ -32,7 +31,7 @@ module WebServer
       end
 
       def valid_config_option?(option)
-        false
+        option.length > 1
       end
 
     end

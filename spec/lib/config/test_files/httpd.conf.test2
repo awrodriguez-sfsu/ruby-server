@@ -13,10 +13,10 @@ UnrecognizedOption blah1 blah2
 # these options are the only mandatory ones in this system
 ServerRoot "/absolute/path/to/server/root"
 DocumentRoot "/absolute/path/to/document/root"
+AccessLog "/absolute/path/to/logs/access_log"
+ErrorLog "/absolute/path/to/logs/error_log"
+Listen 80
 
 # these options have a default value
-Listen # 80
-AccessLog #{server_root}/logs/access_log
-ErrorLog #{server_root}/logs/error_log
 AccessFileName #.htaccess
 DirectoryIndex #index.html

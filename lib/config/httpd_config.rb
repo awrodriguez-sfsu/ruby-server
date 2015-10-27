@@ -1,124 +1,46 @@
+require_relative 'config_reader'
+
 module WebServer
   module Config
-    class HttpdConfig
+    class HttpdConfig < ConfigReader
 
-      RECOGNIZED_1_VALUE_OPTIONS = %w(ServerRoot DocumentRoot Listen AccessLog ErrorLog AccessFileName DirectoryIndex)
-      RECOGNIZED_2_VALUE_OPTIONS = %w(Alias ScriptAlias)
-      OPTION_DEFAULTS = {Listen: 80, AccessFileName: '.htaccess', DirectoryIndex: 'index.html', AccessLog: 'logs/access_log', ErrorLog: 'logs/error_log'}
-      INTERPOLATED_OPTION_DEFAULTS = {AccessLog: 'ServerRoot', ErrorLog: 'ServerRoot'}
+      attr_reader :httpd_options
 
-      attr_reader :file_name
+      def initialize(options = {}, httpd_options = BasicHttpdOptions.new)
+        super(options[:file_name] || 'config/httpd.conf')
+        @httpd_options = httpd_options
 
-      :content
-      :hash
-
-      def initialize(options = {})
-        @file_name = options[:file_name] || 'config/httpd.conf'
-
-        @hash = {}
-        RECOGNIZED_2_VALUE_OPTIONS.each do |option_name|
-          @hash[option_name] = {}
+        @httpd_options.double_value.each do |inner_hash|
+          @hashed_content[inner_hash] = {}
         end
 
-        @content = File.read(@file_name)
-
         load_config_file
-      end
-
-      def server_root
-        @hash['ServerRoot']
-      end
-
-      def document_root
-        @hash['DocumentRoot']
-      end
-
-      def listen
-        @hash['Listen']
-      end
-
-      def access_log
-        @hash['AccessLog']
-      end
-
-      def error_log
-        @hash['ErrorLog']
-      end
-
-      def access_file_name
-        @hash['AccessFileName']
-      end
-
-      def directory_index
-        @hash['DirectoryIndex']
-      end
-
-      def aliases
-        @hash['Alias'].keys
-      end
-
-      def aliased_path(path)
-        @hash['Alias'][path] || ''
-      end
-
-      def script_aliases
-        @hash['ScriptAlias'].keys
-      end
-
-      def script_aliased_path(path)
-        @hash['ScriptAlias'][path] || ''
+        expose_options
       end
 
       private
-      def load_config_file
-        @content.each_line do |raw_line|
-          clean_line = raw_line.strip.tr('"', '').gsub(/#.*/, '')
-
-          array = clean_line.split(' ')
-
-          unless array.length < 2
-            if RECOGNIZED_1_VALUE_OPTIONS.include? array[0]
-              if array[0] === 'Listen'
-                add_single_value_option(array[0], array[1].to_i)
-              else
-                add_single_value_option(array[0], array[1])
-              end
-            elsif RECOGNIZED_2_VALUE_OPTIONS.include? array[0]
-              add_double_value_option(array[0], array[1], array[2])
-            end
-          end
-        end
-
-        OPTION_DEFAULTS.each do |option_name, default_value|
-          unless @hash.key? option_name.to_s
-            if INTERPOLATED_OPTION_DEFAULTS.include? option_name
-              @hash[option_name.to_s] = File.join(@hash[INTERPOLATED_OPTION_DEFAULTS[option_name]], default_value)
-            else
-              @hash[option_name.to_s] = default_value
-            end
-          end
+      def expose_options
+        @httpd_options.option_methods.each do |method_name, content_access|
+          HttpdConfig::class_eval <<-EOS
+            def #{method_name}                 # def aliases
+              @hashed_content#{content_access} #   @hashed_content['Alias'].keys
+            end                                # end
+          EOS
         end
       end
 
-      def add_single_value_option(option_name, value)
-        @hash[option_name] = value
+      def valid_config_option?(option)
+        @httpd_options.valid? option
       end
 
-      def add_double_value_option(option_name, value1, value2)
-        @hash[option_name][value1] = value2
+      def add(option)
+        if @httpd_options.single_value? option[0]
+          @hashed_content[option[0]] = option[1]
+        else
+          @hashed_content[option[0]][option[1]] = option[2]
+        end
       end
 
     end
-
-    class String
-      def to_snake_case
-        self.gsub(/::/, '/').
-            gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
-            gsub(/([a-z\d])([A-Z])/,'\1_\2').
-            tr("-", "_").
-            downcase
-      end
-    end
-
   end
 end

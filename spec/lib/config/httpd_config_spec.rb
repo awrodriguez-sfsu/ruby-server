@@ -21,6 +21,7 @@ describe WebServer::Config::HttpdConfig do
     describe '#listen' do
       it 'should return Listen; as int' do
         expect(httpd_config_object.listen).to eq 9999
+        expect(httpd_config_object.port).to eq 9999
       end
     end
 
@@ -89,18 +90,6 @@ describe WebServer::Config::HttpdConfig do
     describe '#listen' do
       it 'should return Listen; as int' do
         expect(httpd_config_object.listen).to eq 80
-      end
-    end
-
-    describe '#access_log' do
-      it 'should return AccessLog' do
-        expect(httpd_config_object.access_log).to eq '/absolute/path/to/server/root/logs/access_log'
-      end
-    end
-
-    describe '#error_log' do
-      it 'should return ErrorLog' do
-        expect(httpd_config_object.error_log).to eq '/absolute/path/to/server/root/logs/error_log'
       end
     end
 
