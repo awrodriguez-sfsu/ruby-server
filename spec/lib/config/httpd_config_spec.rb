@@ -21,7 +21,6 @@ describe WebServer::Config::HttpdConfig do
     describe '#listen' do
       it 'should return Listen; as int' do
         expect(httpd_config_object.listen).to eq 9999
-        expect(httpd_config_object.port).to eq 9999
       end
     end
 
@@ -49,35 +48,47 @@ describe WebServer::Config::HttpdConfig do
       end
     end
 
-    describe '#aliases' do
+    describe '#alias' do
+      it 'should return hash of Alias' do
+        expect(httpd_config_object.alias).to match({'/aa/' => '/absolute/alias/to/aa', '/bb/' => '/absolute/alias/to/bb'})
+      end
+    end
+
+    describe '#alias_keys' do
       it 'should return array of aliased paths' do
-        expect(httpd_config_object.aliases).to match(['/aa/', '/bb/'])
+        expect(httpd_config_object.alias_keys).to match(['/aa/', '/bb/'])
       end
     end
 
-    describe '#aliased_path' do
+    describe '#alias_for' do
       it 'should return aliased path that exists' do
-        expect(httpd_config_object.aliased_path('/aa/')).to eq '/absolute/alias/to/aa'
+        expect(httpd_config_object.alias_for('/aa/')).to eq '/absolute/alias/to/aa'
       end
 
       it 'should return empty string if no aliased path found' do
-        expect(httpd_config_object.aliased_path('/does/not/exists')).to eq ''
+        expect(httpd_config_object.alias_for('/does/not/exists')).to eq ''
       end
     end
 
-    describe '#script_aliases' do
+    describe '#script_alias' do
+      it 'should return hash of ScriptAlias' do
+        expect(httpd_config_object.script_alias).to match({'/script_aa/' => '/absolute/script/alias/to/aa', '/script_bb/' => '/absolute/script/alias/to/bb'})
+      end
+    end
+
+    describe '#script_alias_keys' do
       it 'should return array of script aliased paths' do
-        expect(httpd_config_object.script_aliases).to match(['/script_aa/', '/script_bb/'])
+        expect(httpd_config_object.script_alias_keys).to match(['/script_aa/', '/script_bb/'])
       end
     end
 
-    describe '#script_aliased_path' do
+    describe '#script_alias_for' do
       it 'should return script_aliased path that exists' do
-        expect(httpd_config_object.script_aliased_path('/script_aa/')).to eq '/absolute/script/alias/to/aa'
+        expect(httpd_config_object.script_alias_for('/script_aa/')).to eq '/absolute/script/alias/to/aa'
       end
 
       it 'should return empty string if no aliased path found' do
-        expect(httpd_config_object.script_aliased_path('/does/not/exists')).to eq ''
+        expect(httpd_config_object.script_alias_for('/does/not/exists')).to eq ''
       end
     end
 
@@ -109,36 +120,6 @@ describe WebServer::Config::HttpdConfig do
 
   context 'default httpd.conf file location' do
     let(:httpd_config_object) {WebServer::Config::HttpdConfig.new}
-
-    describe '#server_root' do
-      it 'should return ServerRoot' do
-        expect(httpd_config_object.server_root).to eq '/home/arod/workspace_667/ruby-server'
-      end
-    end
-
-    describe '#document_root' do
-      it 'should return DocumentRoot' do
-        expect(httpd_config_object.document_root).to eq '/home/arod/workspace_667/ruby-server/public_html'
-      end
-    end
-
-    describe '#listen' do
-      it 'should return Listen' do
-        expect(httpd_config_object.listen).to eq 8080
-      end
-    end
-
-    describe '#script_aliases' do
-      it 'should return script_aliases' do
-        expect(httpd_config_object.script_aliases).to match(['/cgi-bin/'])
-      end
-    end
-
-    describe '#script_aliased_path' do
-      it 'should return script aliased path' do
-        expect(httpd_config_object.script_aliased_path('/cgi-bin/')).to eq '/home/arod/workspace_667/ruby-server/public_html/cgi-bin'
-      end
-    end
 
     describe '#file_name' do
       it 'should return file_name' do
