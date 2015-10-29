@@ -9,10 +9,10 @@ module WebServer
 
     attr_reader :httpd_settings, :mime_settings, :logger
 
-    def initialize(options = {})
+    def initialize
       @httpd_settings = Config::HttpdConfig.new
       @mime_settings  = Config::MimeTypes.new
-      @logger         = Logger.new(@httpd_settings, )
+      @logger         = Logger.new(@httpd_settings, {echo: true})
     end
 
     def start
